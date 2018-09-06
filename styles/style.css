@@ -1,0 +1,10 @@
+html{
+    font-size: 18px;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: lightgrey;
+    padding: 20px;
+}
+
+h3{
+    text-align: center;
+}
