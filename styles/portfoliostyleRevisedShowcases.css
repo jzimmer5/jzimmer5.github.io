@@ -1,0 +1,249 @@
+html{
+    box-sizing: border-box;
+    font-size: 1.2em;
+    background-color: #FFF8F0;
+    margin: 0;
+}
+
+/*changes the color of links and gets rid of the decoration, the call under it adds the underline when hovered over*/
+a {
+    color: #E9724C;
+    text-decoration: none;
+}
+
+a:hover {
+    border-bottom: 2px solid #E9724C;
+}
+
+/*All the css below is for mobile viewing*/
+
+/*Creates a 3 by 1 grid to store all the elements in the header nicely*/
+header{
+    display: grid;
+    width: 100%;
+    grid-template-rows: 58% 28% 14%;
+    grid-template-columns: 100%;
+    background-color: #9E2B25;
+}
+
+/*Sets the image to be the first thing to load in*/
+header img{
+    grid-column: 1;
+    grid-row: 1;
+    margin: auto;
+    border-radius: 90%;
+    max-height: 60%;
+    text-align:center;
+}
+
+/*The text will be in the row below the image*/
+header h1 {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 1.2em;
+    line-height: 1;
+    margin-bottom: 0;
+    margin-top: 0;
+    text-align: center;
+}
+
+/*Sets the menu to be at the bottom of the headers grid*/
+#menu {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 1.5em;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+
+#menu span {
+    border-radius: 3px;
+}
+
+/*creates a grid around the showcase thats one column and 5 rows for mobile users*/
+#main {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 100px 1fr 2fr 1fr 70px;
+}
+
+/*places the title on top and centers the content*/
+#title {
+    display: flex;
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+    justify-content: center;
+}
+
+/*second in the list*/
+#gameDescription {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+/*third in the list, the img will use 80% of its width at all times*/
+#library {
+    grid-row: 3;
+    grid-column: 1;
+    max-width: 80%;
+}
+
+/*fourth in the list*/
+#myRole {
+    grid-row: 4;
+    grid-column: 1;
+}
+
+/*last in the list*/
+#websiteLink {
+    grid-column: 1;
+    grid-row: 5;
+}
+
+/*These will only happen for users with screens that don't get bigger than 768px*/
+@media screen and (max-width: 768px)
+{
+    /*The menu for desktop is hidden on mobile*/
+    #menu {
+        display: none;
+    }
+
+    /*adds a menu that slides out when clicked, the background is slightly transparent so the user knows its above the rest of the content*/
+    #mobileMenu {
+        display: grid;
+        grid-template-columns: 100px 1.5rem;
+        min-height: 120px;
+        max-height: 90vh;
+        overflow: scroll;
+        border: 1px solid black;
+        margin-bottom: 2em;
+        background-color: rgba(255, 255, 255, 0.9);
+        position: fixed;
+        left: -100px;
+        z-index: 2;
+    }
+    #divtoggle {
+        grid-column-start: 2;
+        font-size: 3em;
+        font-weight: bold;
+    }
+
+    #divmenu {
+        grid-column-start: 1;
+        grid-row-start: 1;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #close {
+        display: none;
+    }
+}
+
+/*how the screen should be displayed on anything bigger than 768px*/
+@media screen and (min-width: 768px)
+{
+    /*The menu that mobile users shouldn't be seen when not on mobile*/
+    #mobileMenu, #divtoggle, #divmenu {
+        display: none;
+    }
+    /*opened up the grid layout to be 3 by 5*/
+    header  {
+        grid-template-rows: 40% 10% 5%;
+        grid-template-columns: 10% auto auto auto 10%;
+        background-color: #9E2B25;
+    }
+    
+    /*Change the grid to make a 4 column 4 row page*/
+    main {
+        display: grid;
+        margin: 0;
+        grid-template-columns: 50px 2fr 2fr 50px;
+        grid-template-rows: 100px 2fr 2fr 50px;
+        grid-gap: 10px;
+    }
+
+    /*sets the img to be 100% of its hieght and will the to the left of the rest of the content*/
+    header img {
+        margin-top: 5px;
+        max-height: 100%;
+        grid-column-start: 2;
+    }
+
+    /*sets the text to be centered on the page*/
+    header h1 {
+        grid-row: 1;
+        grid-column: 2;
+        align-self: center;
+        font-size: 1.5em;
+        grid-column-start: 3;
+
+    }
+
+    /*places the menu on the desktop in the top right corner in the header*/
+    #menu {
+        grid-column-start: 3;
+        font-size: .9em;
+        text-align: right;
+        margin-bottom: 0px;
+    }
+
+    /*places the title of the showcase in the first row, spanning the middle two columns*/
+    #title {
+        grid-row: 1;
+        grid-column: 2/4;
+    }
+
+    /*places the descriptions of the showcases in the second row and the second column*/
+    #gameDescription {
+        grid-row: 2;
+        grid-column: 2;
+    }
+
+    /*places the image that is in the showcase in the second row and third column*/
+    #library {
+        grid-row: 2;
+        grid-column: 3;
+        max-width: 100%;
+    }
+
+    /*If the showcase has me describing my role, it is positioned in the third column and row below the img*/
+    #myRole {
+        grid-row: 3;
+        grid-column: 3;
+    }
+
+    /*if the showcase has a link it is in the last row spanning the middle two columns*/
+    #websiteLink {
+        grid-row: 4;
+        grid-column: 2/4;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+}
+
+/*Defines what the page will look like for a printer*/
+@media print{
+    header {
+        background-color: gray;
+    }
+
+    a {
+        color: black;
+
+    }
+
+    a:after {
+        content: " (" attr(href)") ";
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+
+    p {
+        color: gray;
+    }
+    
+}
