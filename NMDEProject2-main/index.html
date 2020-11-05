@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Visualizer</title>
+    <link rel="stylesheet" href="audioAsthetic.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="src/audioSetup.js"></script>
+    <script src="src/uiSetup.js"></script>
+    <script src="src/visualizer.js"></script>
+    <script src="src/audioLoader.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script>
+        "use strict";
+        window.onload = init;
+        //Global variables
+        let audioElement, audioElement2, canvasElement, playButton1, playButton2, drawCtx, audioCtx, audioCtx2, sourceNode, sourceNode2, analyserNode, analyserNode2, gainNode, gainNode2, biquadNode, hue, saturation, light;
+        let NUM_SAMPLES = 128;
+        let audioData = new Uint8Array(NUM_SAMPLES / 2);
+        let audioData2 = new Uint8Array(NUM_SAMPLES / 2);
+        let barColor;
+        let soundType;
+        let visual;
+        let invert = false,
+            tintRed = false,
+            sepia = false,
+            singleSong = true;
+        let lightLength = 400;
+
+        const SOUND_PATH = {
+            sound1: "media/Aerodynamic.mp3",
+            sound2: "media/Crescendolls.mp3",
+            sound3: "media/Doin' It Right.mp3",
+            sound4: "media/Face to Face.mp3",
+            sound5: "media/Fragments of Time.mp3",
+            Sound6: "media/Giorgio by Moroder.mp3",
+            sound7: "media/Harder, Better, Faster, Stronger.mp3",
+            sound8: "media/One More Time.mp3",
+            sound9: "media/Too Long.mp3",
+            sound10: "media/Human After All.mp3",
+            sound11: "media/Robot Rock.mp3",
+            sound12: "media/Technologic.mp3",
+            sound13: "media/Television Rules The Nation.mp3"
+        }
+
+        var sizewidth = "1200";
+        var sizeheight = "960";
+
+        function myFunction() {
+            let x = document.querySelector("#controls");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="container" width=sizewidth height=sizeheight>
+        <canvas id="canvas" width=sizewidth height=sizeheight></canvas>
+
+    
+        <button onclick="myFunction()" id="hide">Hide Controls</button>
+    <div id="controls">
+        <audio id="songOne" controls></audio>
+        <audio id="songTwo" controls></audio>
+        <div id="audControls">
+            <h1>AUDIO CONTROLS</h1>
+            <section>
+                <section id="trackOne">
+                    <label>Track One:
+                        <select id="trackSelectOne">
+                            <option value="media/Aerodynamic.mp3">Aerodynamic</option>
+                            <option value="media/Crescendolls.mp3">Crescendolls</option>
+                            <option value="media/Doin' It Right.mp3" selected>Doin' It Right</option>
+                            <option value="media/Face to Face.mp3">Face to Face</option>
+                            <option value="media/Fragments of Time.mp3">Fragments of Time</option>
+                            <option value="media/Giorgio by Moroder.mp3">Giorgio by Moroder</option>
+                            <option value="media/Harder, Better, Faster, Stronger.mp3">Harder, Better, Faster, Stronger</option>
+                            <option value="media/One More Time.mp3">One More Time</option>
+                            <option value="media/Too Long.mp3">Too Long</option>
+                            <option value="media/Human After All.mp3">Human After All</option>
+                            <option value="media/Robot Rock.mp3">Robot Rock</option>
+                            <option value="media/Technologic.mp3">Technologic</option>
+                            <option value="media/Television Rules The Nation.mp3">Television Rules The Nation</option>
+                        </select>
+                    </label>
+                    <button id="playButtonOne" data-playing="no"></button>
+                </section>
+                <section id="trackTwo">
+                    <label>Track Two:
+                        <select id="trackSelectTwo">
+                            <option value="media/Aerodynamic.mp3">Aerodynamic</option>
+                            <option value="media/Crescendolls.mp3">Crescendolls</option>
+                            <option value="media/Doin' It Right.mp3" selected>Doin' It Right</option>
+                            <option value="media/Face to Face.mp3">Face to Face</option>
+                            <option value="media/Fragments of Time.mp3">Fragments of Time</option>
+                            <option value="media/Giorgio by Moroder.mp3">Giorgio by Moroder</option>
+                            <option value="media/Harder, Better, Faster, Stronger.mp3">Harder, Better, Faster, Stronger</option>
+                            <option value="media/One More Time.mp3">One More Time</option>
+                            <option value="media/Too Long.mp3">Too Long</option>
+                            <option value="media/Human After All.mp3">Human After All</option>
+                            <option value="media/Robot Rock.mp3">Robot Rock</option>
+                            <option value="media/Technologic.mp3">Technologic</option>
+                            <option value="media/Television Rules The Nation.mp3">Television Rules The Nation</option>
+                        </select>
+                    </label>
+                    <button id="playButtonTwo" data-playing="no"></button>
+                </section>
+            </section>
+            <section id="mix">
+                <label for="volumeSlider">Mix Mode:</label>
+                <br>
+                <!-- <input type="radio" name="secondSong" id="twoSongs" value="freq"> -->
+                <input type="range" id="volumeSlider" min="0" max="2" value="0" step="0.01">
+                <!-- <span id="volumeLabel"></span> -->
+            </section>
+
+            <section id="bass">
+                <label for="bassSlider">Bass Slider:</label>
+                <br>
+                <input type="range" id="bassSlider" min="0" max="10" value="5" step="0.01">
+            </section>
+        </div>
+        <div id="visControls">
+            <h1>VISUAL CONTROLS</h1>
+            <section id="visType">
+                <label id="visualLabel">Visual:</label>
+                <br>
+                <label id="triLabel">Triangle</label>
+                <input type="radio" name="visual" id="triangle" value="tri">
+
+                <label id="cirLabel">Circle</label>
+                <input type="radio" name="visual" id="circle" value="cir">
+            </section>
+
+            <section id="soundType">
+                <label id="soundLabel">Sound Type:</label>
+                <br>
+                <label id="freqLabel">Frequency</label>
+                <input type="radio" name="waveFreq" id="f" value="freq" checked>
+
+                <label id="waveLabel">Wave Form</label>
+                <input type="radio" name="waveFreq" id="w" value="wave">
+            </section>
+
+            <section id="tint">
+                <label id="tintLabel">Tint:</label>
+                <br>
+                <label id="redLabel">Red</label>
+                <input type="checkbox" id="tintRedCB">
+
+                <label id="invLabel">Invert</label>
+                <input type="checkbox" id="invertCB">
+
+                <label id="sepLabel">Sepia</label>
+                <input type="checkbox" id="sepiaCB">
+            </section>
+
+            <section id="sqColor">
+                <label id="colorLabel">Color:</label>
+                <br>
+                <label for="hue" id="hLabel">H</label>
+                <input type="range" id="hue" min="0" max="360" step="1" value="0">
+                <br>
+                <label for="saturation" id="sLabel">S</label>
+                <input type="range" id="saturation" min="0" max="100" step="1" value="0">
+                <br>
+                <label for="light" id="bLabel">B</label>
+                <input type="range" id="light" min="0" max="100" step="1" value="100">
+            </section>
+
+            <section id="lightSpread">
+                <label for="raySlider">Light Ray Spread:</label>
+                <br>
+                <input type="range" id="raySlider" min="0" max="2" value="2" step="0.01">
+                <!-- <span id="rayLabel"></span> -->
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
